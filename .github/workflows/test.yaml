@@ -47,7 +47,7 @@ jobs:
           git config --global init.defaultBranch main
           
           # Checkout django-simple-deploy
-          git clone https://github.com/django-simple-deploy/django-simple-deploy.git
+          git clone --branch test-console-output https://github.com/janraasch/django-simple-deploy.git
           cd django-simple-deploy
 
           # Install uv
