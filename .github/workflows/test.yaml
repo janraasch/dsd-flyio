@@ -62,12 +62,12 @@ jobs:
           # git config --global init.defaultBranch main
 
           # Run unit tests
-          source .venv/bin/activate
-          pytest tests/unit_tests -x
+          # source .venv/bin/activate
+          # pytest tests/unit_tests -x
 
           # Run integration tests
-          # source .venv/bin/activate
-          # pytest tests/integration_tests -x
+          source .venv/bin/activate
+          pytest tests/integration_tests -x
 
       - name: Run Windows tests
 
@@ -90,12 +90,12 @@ jobs:
           uv pip install -e ../dsd-flyio
 
           # Configure Git
-          git config --global user.email "ci_tester@example.com"
-          git config --global user.name "Ci Tester"
-          git config --global init.defaultBranch main
+          # git config --global user.email "ci_tester@example.com"
+          # git config --global user.name "Ci Tester"
+          # git config --global init.defaultBranch main
 
           # Run unit tests
           pytest tests\unit_tests -x
 
           # Run integration tests
-          pytest tests\integration_tests -x
+          # pytest tests\integration_tests -x
