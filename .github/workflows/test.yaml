@@ -57,9 +57,9 @@ jobs:
           uv pip install -e ../dsd-flyio
 
           # Configure Git
-          # git config --global user.email "ci_tester@example.com"
-          # git config --global user.name "Ci Tester"
-          # git config --global init.defaultBranch main
+          git config --global user.email "ci_tester@example.com"
+          git config --global user.name "Ci Tester"
+          git config --global init.defaultBranch main
 
           # Run unit tests
           # source .venv/bin/activate
