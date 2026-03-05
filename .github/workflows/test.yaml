@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          path: 'dsd-flyio'
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -39,8 +41,8 @@ jobs:
 
         if: runner.os == 'Linux' || runner.os == 'macOS'
         run: |
-          git clone https://github.com/django-simple-deploy/django-simple-deploy.git ../django-simple-deploy
-          cd ../django-simple-deploy
+          git clone https://github.com/django-simple-deploy/django-simple-deploy.git
+          cd django-simple-deploy
 
           # Install uv
           curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -52,7 +54,7 @@ jobs:
           # Install dependencies
           uv pip install -r requirements.txt
           uv pip install poetry
-          uv pip install -e ${{ github.workspace }}
+          uv pip install -e ../dsd-flyio
 
           # Configure Git
           git config --global user.email "ci_tester@example.com"
@@ -71,8 +73,8 @@ jobs:
 
         if: runner.os == 'Windows'
         run: |
-          git clone https://github.com/django-simple-deploy/django-simple-deploy.git ../django-simple-deploy
-          cd ../django-simple-deploy
+          git clone https://github.com/django-simple-deploy/django-simple-deploy.git
+          cd django-simple-deploy
 
           # Install uv
           powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
@@ -85,7 +87,7 @@ jobs:
           # Install dependencies
           uv pip install -r requirements.txt
           uv pip install poetry
-          uv pip install -e ${{ github.workspace }}
+          uv pip install -e ../dsd-flyio
 
           # Configure Git
           git config --global user.email "ci_tester@example.com"
