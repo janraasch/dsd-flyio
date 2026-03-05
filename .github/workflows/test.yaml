@@ -41,6 +41,12 @@ jobs:
 
         if: runner.os == 'Linux' || runner.os == 'macOS'
         run: |
+          # Configure Git
+          git config --global user.email "ci_tester@example.com"
+          git config --global user.name "Ci Tester"
+          git config --global init.defaultBranch main
+          
+          # Checkout django-simple-deploy
           git clone https://github.com/django-simple-deploy/django-simple-deploy.git
           cd django-simple-deploy
 
@@ -55,11 +61,6 @@ jobs:
           uv pip install -r requirements.txt
           uv pip install poetry
           uv pip install -e ../dsd-flyio
-
-          # Configure Git
-          git config --global user.email "ci_tester@example.com"
-          git config --global user.name "Ci Tester"
-          git config --global init.defaultBranch main
 
           # Run unit tests
           # source .venv/bin/activate
