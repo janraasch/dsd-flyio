@@ -11,8 +11,6 @@ on:
     branches:
       main
 
-  workflow_dispatch:
-
 jobs:
   test:
     name: Run tests on ${{ matrix.os }} with Python ${{ matrix.python-version}}
@@ -29,74 +27,100 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: 'dsd-flyio'
+      
+      - name: Checkout django-simple-deploy
+        uses: actions/checkout@v4
+        with:
+          repository: django-simple-deploy/django-simple-deploy
+          path: django-simple-deploy
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
-      # --- macOS and Linux tests ---
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
 
-      - name: Run macOS and Linux tests
-
-        if: runner.os == 'Linux' || runner.os == 'macOS'
+            - name: Install dependencies
         run: |
-          # Configure Git
+          cd django-simple-deploy/
+          uv venv
+          uv pip install -e ".[dev]"
+          uv pip install -e "../dsd-flyio[dev]"
+      - name: Configure Git
+        run: |
           git config --global user.email "ci_tester@example.com"
           git config --global user.name "Ci Tester"
           git config --global init.defaultBranch main
-          
-          # Checkout django-simple-deploy
-          git clone --branch test-console-output https://github.com/janraasch/django-simple-deploy.git
-          cd django-simple-deploy
-
-          # Install uv
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-
-          # Build and activate virtual environment
-          uv venv .venv
-          source .venv/bin/activate
-
-          # Install dependencies
-          uv pip install -r requirements.txt
-          uv pip install poetry
-          uv pip install -e ../dsd-flyio
-
-          # Run unit tests
-          # source .venv/bin/activate
-          # pytest tests/unit_tests -x
-
-          # Run integration tests
-          source .venv/bin/activate
-          pytest tests/integration_tests -x
-
-      - name: Run Windows tests
-
-        if: runner.os == 'Windows'
+      - name: Run integration tests
         run: |
-          git clone https://github.com/django-simple-deploy/django-simple-deploy.git
-          cd django-simple-deploy
+          cd django-simple-deploy/
+          uv run pytest
+      # --- macOS and Linux tests ---
 
-          # Install uv
-          powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-          $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
+      # - name: Run macOS and Linux tests
 
-          # Build and activate virtual environment
-          uv venv .venv
-          .venv\Scripts\activate
+      #   if: runner.os == 'Linux' || runner.os == 'macOS'
+      #   run: |
+      #     # Configure Git
+      #     git config --global user.email "ci_tester@example.com"
+      #     git config --global user.name "Ci Tester"
+      #     git config --global init.defaultBranch main
+          
+      #     # Checkout django-simple-deploy
+      #     git clone --branch test-console-output https://github.com/janraasch/django-simple-deploy.git
+      #     cd django-simple-deploy
 
-          # Install dependencies
-          uv pip install -r requirements.txt
-          uv pip install poetry
-          uv pip install -e ../dsd-flyio
+      #     # Install uv
+      #     curl -LsSf https://astral.sh/uv/install.sh | sh
 
-          # Configure Git
-          # git config --global user.email "ci_tester@example.com"
-          # git config --global user.name "Ci Tester"
-          # git config --global init.defaultBranch main
+      #     # Build and activate virtual environment
+      #     uv venv .venv
+      #     source .venv/bin/activate
 
-          # Run unit tests
-          pytest tests\unit_tests -x
+      #     # Install dependencies
+      #     uv pip install -r requirements.txt
+      #     uv pip install poetry
+      #     uv pip install -e ../dsd-flyio
 
-          # Run integration tests
-          # pytest tests\integration_tests -x
+      #     # Run unit tests
+      #     # source .venv/bin/activate
+      #     # pytest tests/unit_tests -x
+
+      #     # Run integration tests
+      #     source .venv/bin/activate
+      #     pytest tests/integration_tests -x
+
+      # - name: Run Windows tests
+
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     git clone https://github.com/django-simple-deploy/django-simple-deploy.git
+      #     cd django-simple-deploy
+
+      #     # Install uv
+      #     powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+      #     $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
+
+      #     # Build and activate virtual environment
+      #     uv venv .venv
+      #     .venv\Scripts\activate
+
+      #     # Install dependencies
+      #     uv pip install -r requirements.txt
+      #     uv pip install poetry
+      #     uv pip install -e ../dsd-flyio
+
+      #     # Configure Git
+      #     # git config --global user.email "ci_tester@example.com"
+      #     # git config --global user.name "Ci Tester"
+      #     # git config --global init.defaultBranch main
+
+      #     # Run unit tests
+      #     pytest tests\unit_tests -x
+
+      #     # Run integration tests
+      #     # pytest tests\integration_tests -x
